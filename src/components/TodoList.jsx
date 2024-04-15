@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { toggleTodo } from "../helpers/actions";
+import { toggleTodo, getUpdatedTodo, deleteTodo } from "../helpers/actions";
 
 const TodoList = ({ todos, setTodos }) => {
   const [selectedTodo, setSelectedTodo] = useState(null);
@@ -11,17 +10,7 @@ const TodoList = ({ todos, setTodos }) => {
       if (selectedTodo._id === todo._id) {
         // currentTodo id should match with selectedTodo id then we save the todo...
         try {
-          // createing the updated payload for api
-          const payload = {
-            title: selectedTodo.title,
-            description: selectedTodo.description,
-          };
-          // saving the todo in BE
-          const response = await axios.patch(
-            `http://localhost:8080/api/v1/todos/${selectedTodo._id}`,
-            payload
-          );
-          const currentUpdatedTodo = response.data.data;
+          const currentUpdatedTodo = await getUpdatedTodo(selectedTodo);
           // Saving the updated todo from BE to our local state..
           setTodos((previousTodos) => {
             const updatedTodos = previousTodos.map((todo) =>
@@ -46,7 +35,7 @@ const TodoList = ({ todos, setTodos }) => {
 
   const removeTodo = async (todoId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/todos/${todoId}`);
+      await deleteTodo(todoId);
 
       setTodos((currentTodos) =>
         currentTodos.filter((todo) => todo._id !== todoId)
@@ -56,7 +45,7 @@ const TodoList = ({ todos, setTodos }) => {
     }
   };
   const handleToggle = async (todoId) => {
-    const updatedTodo = toggleTodo(todoId);
+    const updatedTodo = await toggleTodo(todoId);
     // Updating todos status in local todos state...
     setTodos((prevTodos) =>
       prevTodos.map((todo) => (todo._id === todoId ? updatedTodo : todo))

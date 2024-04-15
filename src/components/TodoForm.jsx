@@ -7,7 +7,7 @@ const TodoForm = ({ setTodos }) => {
   const addNewTodo = async (e) => {
     e.preventDefault();
     try {
-      const newTodo = createTodo(title);
+      const newTodo = await createTodo(title);
 
       if (newTodo?._id) {
         setTodos((currentTodos) => [newTodo, ...currentTodos]); // adding new todo(which is an object) in todos array

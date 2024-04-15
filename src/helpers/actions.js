@@ -5,11 +5,10 @@ export const createTodo = async (title) => {
     title,
     description: "test",
   };
-  const response = await axios.post(
-    "http://localhost:8080/api/v1/todos",
-    payload
-  );
-  const newTodo = response.data.data; //object
+  const newTodo = await axios
+    .post("http://localhost:8080/api/v1/todos", payload)
+    .then((response) => response.data.data) //object
+    .catch((error) => console.error("[API ERROR]: creating new todo:", error));
   return newTodo;
 };
 
@@ -17,6 +16,35 @@ export const toggleTodo = async (todoId) => {
   //Update todos state in BE
   const updatedTodo = await axios
     .patch(`http://localhost:8080/api/v1/todos/toggle/status/${todoId}`)
-    .then((res) => res.data.data);
+    .then((response) => response.data.data)
+    .catch((error) => console.error("[API ERROR]: toggle todo:", error));
   return updatedTodo;
+};
+
+export const getUpdatedTodo = async (selectedTodo) => {
+  // createing the updated payload for api
+  const payload = {
+    title: selectedTodo.title,
+    description: selectedTodo.description,
+  };
+  // saving the todo in BE
+  const updatedTodo = await axios
+    .patch(`http://localhost:8080/api/v1/todos/${selectedTodo._id}`, payload)
+    .then((response) => response.data.data)
+    .catch((error) => console.error("[API ERROR]: updating todo:", error));
+
+  return updatedTodo;
+};
+
+export const deleteTodo = async () => {
+  await axios
+    .delete(`http://localhost:8080/api/v1/todos/${todoId}`)
+    .catch((error) => console.error("[API ERROR]: deleting  todo:", error));
+};
+export const getAllTodos = async () => {
+  const allTodos = await axios
+    .get("http://localhost:8080/api/v1/todos")
+    .then((response) => response.data.data)
+    .catch((error) => console.error("[API ERROR]: fetching all todos:", error));
+  return allTodos;
 };
