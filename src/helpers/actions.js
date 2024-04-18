@@ -6,7 +6,7 @@ export const createTodo = async (title) => {
     description: "test",
   };
   const newTodo = await axios
-    .post(`${process.env.REACT_APP_BACKEND_URL}`, payload)
+    .post(`${import.meta.env.VITE_BACKEND_URL}`, payload)
     .then((response) => response.data.data) //object
     .catch((error) => console.error("[API ERROR]: creating new todo:", error));
   return newTodo;
@@ -15,7 +15,7 @@ export const createTodo = async (title) => {
 export const toggleTodo = async (todoId) => {
   //Update todos state in BE
   const updatedTodo = await axios
-    .patch(`${process.env.REACT_APP_BACKEND_URL}/toggle/status/${todoId}`)
+    .patch(`${import.meta.env.VITE_BACKEND_URL}/toggle/status/${todoId}`)
     .then((response) => response.data.data)
     .catch((error) => console.error("[API ERROR]: toggle todo:", error));
   return updatedTodo;
@@ -29,21 +29,21 @@ export const getUpdatedTodo = async (selectedTodo) => {
   };
   // saving the todo in BE
   const updatedTodo = await axios
-    .patch(`${process.env.REACT_APP_BACKEND_URL}/${selectedTodo._id}`, payload)
+    .patch(`${import.meta.env.VITE_BACKEND_URL}/${selectedTodo._id}`, payload)
     .then((response) => response.data.data)
     .catch((error) => console.error("[API ERROR]: updating todo:", error));
 
   return updatedTodo;
 };
 
-export const deleteTodo = async () => {
+export const deleteTodo = async (todoId) => {
   await axios
-    .delete(`${process.env.REACT_APP_BACKEND_URL}/${todoId}`)
+    .delete(`${import.meta.env.VITE_BACKEND_URL}/${todoId}`)
     .catch((error) => console.error("[API ERROR]: deleting  todo:", error));
 };
 export const getAllTodos = async () => {
   const allTodos = await axios
-    .get(process.env.REACT_APP_BACKEND_URL)
+    .get(import.meta.env.VITE_BACKEND_URL)
     .then((response) => response.data.data)
     .catch((error) => console.error("[API ERROR]: fetching all todos:", error));
   return allTodos;
